@@ -1,0 +1,3 @@
+- [ ] Projeto scaffolded: TypeScript + Vue + Express, padrão MVP
+- [ ] README.md criado
+- [ ] Estrutura inicial pronta
