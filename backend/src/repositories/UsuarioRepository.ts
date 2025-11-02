@@ -43,4 +43,40 @@ export class UsuarioRepository {
     if (error || !data) return null;
     return data as Usuario;
   }
+
+  static async atualizar(id: string, dados: Partial<Omit<Usuario, 'id'>>): Promise<Usuario | null> {
+    const { data, error } = await supabase
+      .from('usuarios')
+      .update(dados)
+      .eq('id', id)
+      .select()
+      .single();
+    if (error) {
+      console.error('Erro ao atualizar usuário no Supabase:', error.message, error.details, error.hint);
+    }
+    if (error || !data) return null;
+    return data as Usuario;
+  }
+
+  static async deletar(id: string): Promise<boolean> {
+    const { error } = await supabase
+      .from('usuarios')
+      .delete()
+      .eq('id', id);
+    if (error) {
+      console.error('Erro ao deletar usuário no Supabase:', error.message, error.details, error.hint);
+      return false;
+    }
+    return true;
+  }
+
+  static async buscarPorId(id: string): Promise<Usuario | null> {
+    const { data, error } = await supabase
+      .from('usuarios')
+      .select('*')
+      .eq('id', id)
+      .single();
+    if (error || !data) return null;
+    return data as Usuario;
+  }
 }

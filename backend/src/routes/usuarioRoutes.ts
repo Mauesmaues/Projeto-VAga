@@ -14,8 +14,8 @@ router.post('/login', validate(loginSchema), UsuarioController.login);
 // Rotas de usuário (CRUD)
 router.get('/usuarios', UsuarioController.listar);
 router.post('/usuarios', validate(usuarioSchema), UsuarioController.criar);
-// router.get('/usuarios/:id', UsuarioController.obterPorId); // Implementar se necessário
-// router.put('/usuarios/:id', UsuarioController.atualizar); // Implementar se necessário
-// router.delete('/usuarios/:id', UsuarioController.remover); // Implementar se necessário
+router.get('/usuarios/:id', UsuarioController.obterPorId);
+router.put('/usuarios/:id', UsuarioController.atualizar);
+router.delete('/usuarios/:id', UsuarioController.remover);
 
 export default router;

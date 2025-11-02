@@ -31,7 +31,13 @@ export class UsuarioController {
 
   static async listar(req: Request, res: Response) {
     const usuarios = await UsuarioRepository.listarTodos();
-    res.json(usuarios.map(u => ({ id: u.id, nome: u.nome, email: u.email, tipo: u.tipo })));
+    res.json(usuarios.map(u => ({ 
+      id: u.id, 
+      nome: u.nome, 
+      email: u.email, 
+      tipo: u.tipo,
+      created_at: u.created_at 
+    })));
   }
 
   static async criar(req: Request, res: Response) {
@@ -59,5 +65,56 @@ export class UsuarioController {
     }
   }
 
-  // Métodos obterPorId, atualizar, remover podem ser implementados conforme necessidade
+  static async obterPorId(req: Request, res: Response) {
+    const { id } = req.params;
+    const usuario = await UsuarioRepository.buscarPorId(id);
+    if (!usuario) {
+      return res.status(404).json({ sucesso: false, mensagem: 'Usuário não encontrado.' });
+    }
+    const { senha: _, ...usuarioSeguro } = usuario;
+    res.json(usuarioSeguro);
+  }
+
+  static async atualizar(req: Request, res: Response) {
+    const { id } = req.params;
+    const { nome, email, senha, tipo } = req.body;
+
+    const dados: any = {};
+    if (nome) dados.nome = nome;
+    if (email) dados.email = email;
+    if (tipo) dados.tipo = tipo;
+    
+    // Só atualiza a senha se foi fornecida
+    if (senha) {
+      dados.senha = await PasswordService.hash(senha);
+    }
+
+    try {
+      const usuario = await UsuarioRepository.atualizar(id, dados);
+      if (usuario) {
+        const { senha: _, ...usuarioSeguro } = usuario;
+        res.json(usuarioSeguro);
+      } else {
+        res.status(404).json({ sucesso: false, mensagem: 'Usuário não encontrado.' });
+      }
+    } catch (err: any) {
+      console.error('Erro ao atualizar usuário:', err);
+      res.status(500).json({ sucesso: false, mensagem: 'Erro ao atualizar usuário.', detalhes: err?.message || err });
+    }
+  }
+
+  static async remover(req: Request, res: Response) {
+    const { id } = req.params;
+    try {
+      const sucesso = await UsuarioRepository.deletar(id);
+      if (sucesso) {
+        res.json({ sucesso: true, mensagem: 'Usuário removido com sucesso.' });
+      } else {
+        res.status(404).json({ sucesso: false, mensagem: 'Usuário não encontrado.' });
+      }
+    } catch (err: any) {
+      console.error('Erro ao remover usuário:', err);
+      res.status(500).json({ sucesso: false, mensagem: 'Erro ao remover usuário.', detalhes: err?.message || err });
+    }
+  }
 }

@@ -6,6 +6,7 @@ export interface Usuario {
   email: string;
   senha: string;
   tipo: TipoUsuario;
+  created_at?: string;
 }
 
 export { TipoUsuario } from './UserType';
