@@ -3,48 +3,75 @@
     <h2>Login</h2>
     <form @submit.prevent="entrar">
       <div>
-        <label for="nome">Usuário</label>
-        <input id="nome" v-model="nome" required />
+        <label for="email">E-mail</label>
+        <input id="email" v-model="email" required />
       </div>
       <div>
         <label for="senha">Senha</label>
         <input id="senha" type="password" v-model="senha" required />
       </div>
-      <button type="submit">Entrar</button>
+      <button type="submit" :disabled="carregando">
+        {{ carregando ? 'Entrando...' : 'Entrar' }}
+      </button>
     </form>
     <Modal :visivel="erroVisivel" @fechar="erroVisivel = false">
-      <p>Usuário ou senha inválidos.</p>
+      <p>{{ mensagemErro }}</p>
     </Modal>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import Modal from '../components/Modal.vue';
+import { AuthService } from '../services/authService';
+import type { LoginResponse, ErrorResponse } from '../types/api';
 
 export default defineComponent({
   name: 'LoginView',
   components: { Modal },
   setup() {
-    const nome = ref('');
+    const router = useRouter();
+    const email = ref('');
     const senha = ref('');
     const erroVisivel = ref(false);
+    const mensagemErro = ref('E-mail ou senha inválidos.');
+    const carregando = ref(false);
 
     const entrar = async () => {
-      // Substitua a URL pelo endpoint real do backend
-      const resp = await fetch('http://localhost:3000/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nome: nome.value, senha: senha.value })
-      });
-      if (resp.ok) {
-        // Redirecionar ou salvar usuário logado
-      } else {
+      carregando.value = true;
+      
+      try {
+        const resp = await fetch('http://localhost:3000/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: email.value, senha: senha.value })
+        });
+        
+        if (resp.ok) {
+          const data: LoginResponse = await resp.json();
+          
+          // Salva token e usuário usando AuthService
+          AuthService.setToken(data.token);
+          AuthService.setUser(data.usuario);
+          
+          // Redireciona usando router
+          router.push('/dashboard');
+        } else {
+          const erro: ErrorResponse = await resp.json();
+          mensagemErro.value = erro.mensagem || 'E-mail ou senha inválidos.';
+          erroVisivel.value = true;
+        }
+      } catch (error) {
+        console.error('Erro ao fazer login:', error);
+        mensagemErro.value = 'Erro ao conectar com o servidor.';
         erroVisivel.value = true;
+      } finally {
+        carregando.value = false;
       }
     };
 
-    return { nome, senha, erroVisivel, entrar };
+    return { email, senha, erroVisivel, mensagemErro, carregando, entrar };
   }
 });
 </script>

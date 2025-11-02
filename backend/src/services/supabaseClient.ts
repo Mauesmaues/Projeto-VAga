@@ -1,8 +1,15 @@
 import { createClient } from '@supabase/supabase-js';
+import dotenv from 'dotenv';
 
-const supabaseUrl = 'https://uiaumpgcobookozwpbbe.supabase.co';
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVpYXVtcGdjb2Jvb2tvendwYmJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE4NjA4NTYsImV4cCI6MjA3NzQzNjg1Nn0.G0AiBWBkCAMRohvGEQGKZjceRvlC6buvtF9Wqq1gwO4';
-const supabaseServiceKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVpYXVtcGdjb2Jvb2tvendwYmJlIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MTg2MDg1NiwiZXhwIjoyMDc3NDM2ODU2fQ.csVjB9dYrD-2XGt9H1__6NnL6cK98hBj6c6xpWrHzJA';
+dotenv.config();
+
+const supabaseUrl = process.env.SUPABASE_URL || '';
+const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || '';
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY || '';
+
+if (!supabaseUrl || !supabaseAnonKey || !supabaseServiceKey) {
+  throw new Error('Variáveis de ambiente do Supabase não configuradas');
+}
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 export const supabaseService = createClient(supabaseUrl, supabaseServiceKey);

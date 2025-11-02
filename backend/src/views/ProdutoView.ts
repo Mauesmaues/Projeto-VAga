@@ -6,7 +6,8 @@ export class ProdutoView {
       id: produto.id,
       nome: produto.nome,
       preco: produto.preco,
-      descricao: produto.descricao
+      quantidade: produto.quantidade,
+      criado_em: produto.criado_em
     };
   }
 
