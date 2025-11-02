@@ -191,8 +191,7 @@ export default defineComponent({
     function formatarTipo(tipo: string): string {
       const tipos: Record<string, string> = {
         'ADMIN': 'Administrador',
-        'USUARIO': 'Usuário',
-        'VENDEDOR': 'Vendedor',
+        'OPERADOR': 'Operador',
       };
       return tipos[tipo] || tipo;
     }
@@ -200,8 +199,7 @@ export default defineComponent({
     function getCorTipo(tipo: string): string {
       const cores: Record<string, string> = {
         'ADMIN': 'error',
-        'USUARIO': 'primary',
-        'VENDEDOR': 'success',
+        'OPERADOR': 'primary',
       };
       return cores[tipo] || 'grey';
     }
