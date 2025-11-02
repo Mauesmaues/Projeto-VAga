@@ -26,7 +26,8 @@ export class UsuarioRepository {
   static async listarTodos(): Promise<Usuario[]> {
     const { data, error } = await supabase
       .from('usuarios')
-      .select('*');
+      .select('*')
+      .order('created_at', { ascending: false });
     if (error || !data) return [];
     return data as Usuario[];
   }
