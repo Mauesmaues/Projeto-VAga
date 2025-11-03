@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 100%; max-width: 100%; overflow-y: auto; box-sizing: border-box;">
+  <div>
     <!-- Header -->
     <HistoricoEstoqueHeader 
       :totalItens="historico.length"

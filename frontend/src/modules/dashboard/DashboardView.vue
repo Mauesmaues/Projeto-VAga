@@ -27,10 +27,10 @@
     </v-app-bar>
 
     <!-- Main Content -->
-    <v-main style="background: #181818; height: 100vh;">
-      <div style="padding: 24px; width: 100%; box-sizing: border-box;">
+    <v-main style="background: #181818;">
+      <v-container fluid style="padding: 24px; max-width: 100%;">
         <router-view />
-      </div>
+      </v-container>
     </v-main>
   </v-layout>
 </template>
