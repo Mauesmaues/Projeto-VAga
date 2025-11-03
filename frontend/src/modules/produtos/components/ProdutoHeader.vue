@@ -1,6 +1,6 @@
 <template>
   <v-row align="center" class="mb-6" no-gutters>
-    <v-col cols="12" md="6" class="d-flex align-center">
+    <v-col cols="12" md="6" class="d-flex align-center mb-4 mb-md-0">
       <v-avatar color="primary" size="48">
         <v-icon>mdi-package-variant</v-icon>
       </v-avatar>
@@ -28,12 +28,34 @@
       </v-btn>
     </v-col>
   </v-row>
+
+  <!-- Campo de Busca -->
+  <v-row class="mb-4" no-gutters>
+    <v-col cols="12">
+      <v-text-field
+        :model-value="busca"
+        @update:model-value="$emit('update:busca', $event)"
+        label="Buscar produto por nome..."
+        prepend-inner-icon="mdi-magnify"
+        variant="outlined"
+        density="comfortable"
+        clearable
+        hide-details
+      />
+    </v-col>
+  </v-row>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 export default defineComponent({
   name: 'ProdutoHeader',
-  emits: ['abrirModalCadastro', 'abrirModalEstoque']
+  props: {
+    busca: {
+      type: String,
+      default: ''
+    }
+  },
+  emits: ['abrirModalCadastro', 'abrirModalEstoque', 'update:busca']
 });
 </script>

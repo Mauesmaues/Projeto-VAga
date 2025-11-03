@@ -3,6 +3,7 @@
   <div style="width: 100%; max-width: 100%; overflow-y: auto; box-sizing: border-box;">
     <!-- Header -->
     <ProdutoHeader 
+      v-model:busca="busca"
       @abrirModalCadastro="modalCadastro = true"
       @abrirModalEstoque="modalEstoque = true"
     />
@@ -11,7 +12,7 @@
     <v-row no-gutters>
       <v-col cols="12">
         <ProdutoTabela 
-          :produtos="produtos"
+          :produtos="produtosFiltrados"
           @editar="abrirModalEdicao"
           @deletar="confirmarDelecao"
         />
@@ -69,7 +70,7 @@
 
 <script lang="ts">
 
-import { defineComponent, ref, onMounted } from 'vue';
+import { defineComponent, ref, onMounted, computed } from 'vue';
 import ProdutoHeader from './components/ProdutoHeader.vue';
 import ProdutoTabela from './components/ProdutoTabela.vue';
 import ModalCadastrarProduto from './components/ModalCadastrarProduto.vue';
@@ -89,6 +90,7 @@ export default defineComponent({
   },
   setup() {
     const produtos = ref<Produto[]>([]);
+    const busca = ref('');
     const modalCadastro = ref(false);
     const modalEstoque = ref(false);
     const modalEdicao = ref(false);
@@ -97,6 +99,16 @@ export default defineComponent({
     const snackbar = ref(false);
     const snackbarText = ref('');
     const snackbarColor = ref('success');
+
+    // Computed para filtrar produtos por nome
+    const produtosFiltrados = computed(() => {
+      if (!busca.value) {
+        return produtos.value;
+      }
+      return produtos.value.filter(produto => 
+        produto.nome.toLowerCase().includes(busca.value.toLowerCase())
+      );
+    });
     
     async function carregarProdutos() {
       try {
@@ -197,7 +209,9 @@ export default defineComponent({
     onMounted(carregarProdutos);
     
     return { 
-      produtos, 
+      produtos,
+      busca,
+      produtosFiltrados,
       modalCadastro,
       modalEstoque,
       modalEdicao,
