@@ -35,6 +35,7 @@
         @click="fecharDrawer"
       />
       <v-list-item 
+        v-if="canManageUsers"
         to="/dashboard/usuarios" 
         prepend-icon="mdi-account" 
         title="Usuários"
@@ -83,6 +84,7 @@
 import { defineComponent, computed, ref } from 'vue';
 import { useDisplay } from 'vuetify';
 import { AuthService } from '../../../services/authService';
+import { PermissionService } from '../../../services/permissionService';
 
 export default defineComponent({
   name: 'DashboardSidebar',
@@ -96,6 +98,8 @@ export default defineComponent({
       return user?.nome || 'Usuário';
     });
 
+    const canManageUsers = computed(() => PermissionService.canManageUsers());
+
     const confirmarLogout = () => {
       AuthService.logout();
       dialogSair.value = false;
@@ -108,7 +112,7 @@ export default defineComponent({
       }
     };
 
-    return { nomeUsuario, dialogSair, confirmarLogout, fecharDrawer };
+    return { nomeUsuario, dialogSair, confirmarLogout, fecharDrawer, canManageUsers };
   }
 });
 </script>

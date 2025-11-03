@@ -62,7 +62,7 @@
       </template>
 
       <template v-slot:item.acoes="{ item }">
-        <div class="d-flex justify-center ga-2">
+        <div v-if="canModify" class="d-flex justify-center ga-2">
           <v-btn
             icon
             size="small"
@@ -82,6 +82,9 @@
             <v-icon>mdi-delete</v-icon>
           </v-btn>
         </div>
+        <div v-else class="text-center text-grey">
+          <v-icon size="small">mdi-eye</v-icon>
+        </div>
       </template>
       
       <template v-slot:no-data>
@@ -98,6 +101,7 @@
 <script lang="ts">
 import { defineComponent, computed, PropType, ref } from 'vue';
 import type { Produto } from '../../../types/produto';
+import { PermissionService } from '../../../services/permissionService';
 
 export default defineComponent({
   name: 'ProdutoTabela',
@@ -110,6 +114,7 @@ export default defineComponent({
   emits: ['editar', 'deletar'],
   setup(props) {
     const pesquisa = ref('');
+    const canModify = computed(() => PermissionService.canModify());
 
     const produtosFiltrados = computed(() => {
       if (!pesquisa.value) {
@@ -164,7 +169,8 @@ export default defineComponent({
       headers, 
       formatarPreco, 
       pesquisa, 
-      produtosFiltrados 
+      produtosFiltrados,
+      canModify
     };
   },
 });

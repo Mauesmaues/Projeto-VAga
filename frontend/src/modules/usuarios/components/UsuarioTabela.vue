@@ -75,7 +75,7 @@
       </template>
 
       <template v-slot:item.acoes="{ item }">
-        <div class="d-flex justify-center ga-2">
+        <div v-if="canManageUsers" class="d-flex justify-center ga-2">
           <v-btn
             icon
             size="small"
@@ -95,6 +95,9 @@
             <v-icon>mdi-delete</v-icon>
           </v-btn>
         </div>
+        <div v-else class="text-center text-grey">
+          <v-icon size="small">mdi-eye</v-icon>
+        </div>
       </template>
       
       <template v-slot:no-data>
@@ -111,6 +114,7 @@
 <script lang="ts">
 import { defineComponent, computed, ref, PropType } from 'vue';
 import type { UsuarioResponse } from '../api';
+import { PermissionService } from '../../../services/permissionService';
 
 export default defineComponent({
   name: 'UsuarioTabela',
@@ -124,6 +128,7 @@ export default defineComponent({
   setup(props) {
     const pesquisa = ref('');
     const ordenacao = ref('recente');
+    const canManageUsers = computed(() => PermissionService.canManageUsers());
 
     const opcoesOrdenacao = [
       { title: 'Mais Recentes', value: 'recente' },
@@ -228,6 +233,7 @@ export default defineComponent({
       formatarTipo,
       getCorTipo,
       formatarData,
+      canManageUsers
     };
   },
 });
