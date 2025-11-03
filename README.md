@@ -247,15 +247,6 @@ Router Guards
 - Validação de **token expirado** no frontend
 - Interceptor HTTP com **logout automático** (401)
 - CORS configurado
-
-### 🔄 Melhorias Futuras
-- [ ] Refresh token
-- [ ] Rate limiting
-- [ ] Logs de auditoria
-- [ ] 2FA (autenticação em dois fatores)
-- [ ] Criptografia de dados sensíveis
-- [ ] Sanitização de HTML
-
 ---
 
 ## 📡 API Endpoints
