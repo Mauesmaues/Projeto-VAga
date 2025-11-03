@@ -163,7 +163,7 @@ Projeto-VAga/
 ## 🔧 Instalação e Configuração
 
 ### Pré-requisitos
-- Node.js 18+ e npm
+- Node.js 16+ e npm
 - Conta no Supabase (ou PostgreSQL local)
 
 ### 1. Backend
