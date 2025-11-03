@@ -2,57 +2,66 @@
 
 
 <template>
-  <div style="height: 100%; display: flex; flex-direction: column; overflow-y: auto;">
-    <!-- Header -->
-    <div style="padding: 16px; display: flex; align-items: center;">
-      <v-icon color="primary" size="32">mdi-cash-register</v-icon>
+  <div style="height: 100%; display: flex; flex-direction: column;">
+    <!-- Header (fixo) -->
+    <div style="padding: 16px; display: flex; align-items: center; flex-shrink: 0;">
+      <v-icon color="white" size="32">mdi-cash-register</v-icon>
       <div style="margin-left: 12px;">
         <div style="font-weight: bold; font-size: 18px; color: white;">ANB Farma</div>
-        <div style="font-size: 12px; color: #aaa;">{{ nomeUsuario }}</div>
+        <div style="font-size: 12px; color: rgba(255,255,255,0.7);">{{ nomeUsuario }}</div>
       </div>
     </div>
     
-    <v-divider style="border-color: #333;"></v-divider>
+    <v-divider style="border-color: rgba(255,255,255,0.2); flex-shrink: 0;"></v-divider>
     
-    <!-- Menu -->
-    <v-list nav density="comfortable" style="flex: 1; background: transparent;">
-      <v-list-item 
-        to="/dashboard" 
-        prepend-icon="mdi-view-dashboard" 
-        title="Dashboard"
-        @click="fecharDrawer"
-      />
-      <v-list-item 
-        to="/dashboard/produtos" 
-        prepend-icon="mdi-package-variant" 
-        title="Produtos"
-        @click="fecharDrawer"
-      />
-      <v-list-item 
-        to="/dashboard/historico-estoque" 
-        prepend-icon="mdi-history" 
-        title="Histórico de Estoque"
-        @click="fecharDrawer"
-      />
-      <v-list-item 
-        v-if="canManageUsers"
-        to="/dashboard/usuarios" 
-        prepend-icon="mdi-account" 
-        title="Usuários"
-        @click="fecharDrawer"
-      />
-    </v-list>
+    <!-- Menu (com scroll) -->
+    <div style="flex: 1; overflow-y: auto;">
+      <v-list nav density="comfortable" style="background: transparent;" class="text-white">
+        <v-list-item 
+          to="/dashboard" 
+          prepend-icon="mdi-view-dashboard" 
+          title="Dashboard"
+          @click="fecharDrawer"
+          color="white"
+        />
+        <v-list-item 
+          to="/dashboard/produtos" 
+          prepend-icon="mdi-package-variant" 
+          title="Produtos"
+          @click="fecharDrawer"
+          color="white"
+        />
+        <v-list-item 
+          to="/dashboard/historico-estoque" 
+          prepend-icon="mdi-history" 
+          title="Histórico de Estoque"
+          @click="fecharDrawer"
+          color="white"
+        />
+        <v-list-item 
+          v-if="canManageUsers"
+          to="/dashboard/usuarios" 
+          prepend-icon="mdi-account" 
+          title="Usuários"
+          @click="fecharDrawer"
+          color="white"
+        />
+      </v-list>
+    </div>
     
-    <v-divider style="border-color: #333;"></v-divider>
-    
-    <!-- Logout -->
-    <v-list nav density="comfortable" style="background: transparent;">
-      <v-list-item 
-        @click="dialogSair = true" 
-        prepend-icon="mdi-logout" 
-        title="Sair"
-      />
-    </v-list>
+    <!-- Logout (fixo) -->
+    <div style="flex-shrink: 0;">
+      <v-divider style="border-color: rgba(255,255,255,0.2);"></v-divider>
+      
+      <v-list nav density="comfortable" style="background: transparent;" class="text-white">
+        <v-list-item 
+          @click="dialogSair = true" 
+          prepend-icon="mdi-logout" 
+          title="Sair"
+          color="white"
+        />
+      </v-list>
+    </div>
 
     <!-- Dialog de Confirmação de Logout -->
     <v-dialog v-model="dialogSair" max-width="400px">

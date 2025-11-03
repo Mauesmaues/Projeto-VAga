@@ -5,6 +5,7 @@ import produtoRoutes from './routes/produtoRoutes';
 import vendaRoutes from './routes/vendaRoutes';
 import dashboardRoutes from './routes/dashboardRoutes';
 import historicoEstoqueRoutes from './routes/historicoEstoqueRoutes';
+import estornoRoutes from './routes/estornoRoutes';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { JWTPayload } from './types/api';
@@ -86,6 +87,7 @@ app.use('/', produtoRoutes);
 app.use('/vendas', vendaRoutes);
 app.use('/dashboard', dashboardRoutes);
 app.use('/', historicoEstoqueRoutes);
+app.use('/estornos', estornoRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

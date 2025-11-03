@@ -59,7 +59,7 @@
           <v-divider></v-divider>
           <v-data-table
             :headers="headers"
-            :items="vendas"
+            :items="vendasComEstorno"
             :items-per-page="10"
             :loading="carregando"
             class="elevation-0"
@@ -72,9 +72,28 @@
               {{ formatarData(item.data_venda) }}
             </template>
             <template v-slot:item.forma_pagamento="{ item }">
-              <v-chip :color="getCorPagamento(item.forma_pagamento)" size="small">
-                {{ formatarPagamento(item.forma_pagamento) }}
+              <v-chip 
+                :color="item.estornada ? 'error' : getCorPagamento(item.forma_pagamento)" 
+                size="small"
+              >
+                {{ item.estornada ? 'ESTORNADO' : formatarPagamento(item.forma_pagamento) }}
               </v-chip>
+            </template>
+            <template v-slot:item.acoes="{ item }">
+              <div class="d-flex justify-end">
+                <v-btn
+                  v-if="podeEstornar && !item.estornada"
+                  icon
+                  size="small"
+                  color="error"
+                  variant="text"
+                  @click="abrirDialogEstorno(item)"
+                  title="Estornar venda"
+                >
+                  <v-icon>mdi-undo-variant</v-icon>
+                </v-btn>
+                <span v-else-if="item.estornada" class="text-error text-caption">Estornado</span>
+              </div>
             </template>
           </v-data-table>
         </v-card>
@@ -86,16 +105,49 @@
       v-model="modalNovaVenda" 
       @vendaCriada="handleVendaCriada"
     />
+
+    <!-- Dialog de confirmação de estorno -->
+    <v-dialog v-model="dialogEstorno" max-width="500px">
+      <v-card>
+        <v-card-title class="text-h6">Confirmar Estorno</v-card-title>
+        <v-card-text>
+          <p class="mb-4">Tem certeza que deseja estornar esta venda?</p>
+          <v-text-field
+            v-model="motivoEstorno"
+            label="Motivo do estorno (opcional)"
+            variant="outlined"
+            density="comfortable"
+            hint="Ex: Produto devolvido, erro no valor, etc."
+          />
+          <v-alert type="warning" class="mt-4" density="compact">
+            Os produtos serão devolvidos ao estoque automaticamente.
+          </v-alert>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn variant="text" @click="fecharDialogEstorno">Cancelar</v-btn>
+          <v-btn color="error" variant="elevated" @click="confirmarEstorno" :loading="carregandoEstorno">
+            Estornar
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <!-- Snackbar -->
+    <v-snackbar v-model="snackbar" :color="snackbarColor" timeout="3000">
+      {{ snackbarText }}
+    </v-snackbar>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, onMounted, computed } from 'vue';
-import { listarVendas } from '../../vendas/api';
+import { listarVendas, criarEstorno, verificarEstorno } from '../../vendas/api';
 import { getEstatisticas } from '../api';
 import type { Venda } from '../../../types/venda';
 import type { Estatisticas } from '../api';
 import ModalNovaVenda from '../../vendas/components/ModalNovaVenda.vue';
+import { PermissionService } from '../../../services/permissionService';
 
 export default defineComponent({
   name: 'DashboardKpis',
@@ -107,6 +159,15 @@ export default defineComponent({
     const vendas = ref<Venda[]>([]);
     const estatisticas = ref<Estatisticas | null>(null);
     const carregando = ref(false);
+    const estornosMap = ref<Map<string, boolean>>(new Map());
+    const dialogEstorno = ref(false);
+    const vendaSelecionada = ref<Venda | null>(null);
+    const motivoEstorno = ref('');
+    const carregandoEstorno = ref(false);
+    const snackbar = ref(false);
+    const snackbarText = ref('');
+    const snackbarColor = ref('success');
+    const podeEstornar = PermissionService.canModify();
 
     const kpis = computed(() => [
       { 
@@ -126,12 +187,20 @@ export default defineComponent({
         label: 'Itens em Estoque' 
       }
     ]);
+
+    const vendasComEstorno = computed(() => {
+      return vendas.value.map(venda => ({
+        ...venda,
+        estornada: estornosMap.value.get(venda.id) || false,
+      }));
+    });
     
     const headers = [
       { title: 'Data', key: 'data_venda', sortable: true },
       { title: 'Operador', key: 'usuario_nome', sortable: true },
       { title: 'Total', key: 'valor_total', sortable: true },
-      { title: 'Pagamento', key: 'forma_pagamento', sortable: true }
+      { title: 'Pagamento', key: 'forma_pagamento', sortable: true },
+      { title: 'Ações', key: 'acoes', sortable: false, align: 'end' as const, width: '100px' }
     ];
 
     async function carregarDados() {
@@ -143,6 +212,12 @@ export default defineComponent({
         ]);
         vendas.value = vendasData;
         estatisticas.value = statsData;
+
+        // Verificar quais vendas foram estornadas
+        for (const venda of vendas.value) {
+          const estornada = await verificarEstorno(venda.id); // UUID como string
+          estornosMap.value.set(venda.id, estornada);
+        }
       } catch (error) {
         console.error('Erro ao carregar dados:', error);
       } finally {
@@ -195,23 +270,80 @@ export default defineComponent({
       carregarDados(); // Recarregar dados após criar venda
     }
 
+    function abrirDialogEstorno(venda: Venda) {
+      vendaSelecionada.value = venda;
+      motivoEstorno.value = '';
+      dialogEstorno.value = true;
+    }
+
+    function fecharDialogEstorno() {
+      dialogEstorno.value = false;
+      vendaSelecionada.value = null;
+      motivoEstorno.value = '';
+    }
+
+    async function confirmarEstorno() {
+      if (!vendaSelecionada.value) return;
+
+      carregandoEstorno.value = true;
+      try {
+        console.log('Estornando venda:', { 
+          venda_id: vendaSelecionada.value.id, 
+          vendaSelecionada: vendaSelecionada.value,
+          motivo: motivoEstorno.value 
+        });
+
+        await criarEstorno({
+          venda_id: vendaSelecionada.value.id,
+          motivo: motivoEstorno.value || undefined,
+        });
+
+        // Atualizar status de estorno localmente
+        estornosMap.value.set(vendaSelecionada.value.id, true);
+
+        snackbarText.value = 'Venda estornada com sucesso! Produtos devolvidos ao estoque.';
+        snackbarColor.value = 'success';
+        snackbar.value = true;
+
+        fecharDialogEstorno();
+        carregarDados(); // Recarregar dados
+      } catch (error: any) {
+        snackbarText.value = error.message || 'Erro ao estornar venda';
+        snackbarColor.value = 'error';
+        snackbar.value = true;
+      } finally {
+        carregandoEstorno.value = false;
+      }
+    }
+
     onMounted(() => {
       carregarDados();
     });
     
     return { 
       kpis, 
-      vendas, 
+      vendas,
+      vendasComEstorno,
       headers,
       modalNovaVenda,
       carregando,
+      dialogEstorno,
+      motivoEstorno,
+      carregandoEstorno,
+      snackbar,
+      snackbarText,
+      snackbarColor,
+      podeEstornar,
       abrirModalVenda,
       handleVendaCriada,
       carregarDados,
       formatarPreco,
       formatarData,
       formatarPagamento,
-      getCorPagamento
+      getCorPagamento,
+      abrirDialogEstorno,
+      fecharDialogEstorno,
+      confirmarEstorno,
     };
   }
 });

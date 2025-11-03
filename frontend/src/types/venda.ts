@@ -14,10 +14,25 @@ export interface Venda {
   valor_total: number;
   forma_pagamento: 'dinheiro' | 'cartao' | 'pix';
   itens?: ItemVenda[];
+  estornada?: boolean;
 }
 
 export interface VendaInput {
   valor_total: number;
   forma_pagamento: 'dinheiro' | 'cartao' | 'pix';
   itens: ItemVenda[];
+}
+
+export interface Estorno {
+  id: number;
+  venda_id: string; // UUID
+  usuario_id: number;
+  motivo?: string;
+  data_estorno: string;
+  valor_estornado: number;
+}
+
+export interface CriarEstornoDTO {
+  venda_id: string | number; // Aceita UUID (string) ou number
+  motivo?: string;
 }

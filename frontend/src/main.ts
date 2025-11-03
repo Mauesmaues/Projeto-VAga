@@ -13,6 +13,26 @@ const vuetify = createVuetify({
 	icons: {
 		defaultSet: 'mdi',
 	},
+	theme: {
+		defaultTheme: 'customLight',
+		themes: {
+			customLight: {
+				dark: false,
+				colors: {
+					primary: '#1976D2',        // Azul principal do favicon
+					secondary: '#42A5F5',      // Azul claro
+					accent: '#2196F3',         // Azul médio
+					background: '#F5F7FA',     // Branco azulado suave
+					surface: '#FFFFFF',        // Branco puro
+					'surface-variant': '#E3F2FD', // Azul muito claro
+					error: '#EF5350',
+					success: '#66BB6A',
+					warning: '#FFA726',
+					info: '#42A5F5',
+				},
+			},
+		},
+	},
 });
 
 const app = createApp(App);

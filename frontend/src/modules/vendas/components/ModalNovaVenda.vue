@@ -217,14 +217,13 @@
       <v-divider></v-divider>
 
       <!-- Footer -->
-      <v-card-actions class="pa-4 flex-column flex-sm-row">
-        <v-spacer class="d-none d-sm-flex"></v-spacer>
+      <v-card-actions class="pa-4 flex-column">
         <v-btn
           variant="text"
           @click="fechar"
           :disabled="carregando"
           block
-          class="mb-2 mb-sm-0"
+          class="mb-2"
         >
           Cancelar
         </v-btn>
@@ -236,7 +235,7 @@
           :disabled="itens.length === 0 || !formaPagamento"
           prepend-icon="mdi-cart-plus"
           block
-          class="mb-2 mb-sm-0"
+          class="mb-2"
         >
           Continuar Vendendo
         </v-btn>

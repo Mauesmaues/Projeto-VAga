@@ -5,7 +5,7 @@
       <span class="text-h6 font-weight-bold">Usuários Cadastrados</span>
       <v-spacer></v-spacer>
       <v-chip color="primary" variant="flat">
-        {{ usuariosFiltrados.length }} usuários
+        {{ usuariosFiltrados.length }}
       </v-chip>
     </v-card-title>
     
