@@ -2,7 +2,7 @@
 
 <template>
   <div style="height: 100%; display: flex; flex-direction: column;">
-    <!-- Header (fixo) -->
+
     <div style="padding: 16px; display: flex; align-items: center; flex-shrink: 0;">
       <v-icon color="white" size="32">mdi-cash-register</v-icon>
       <div style="margin-left: 12px;">
@@ -13,11 +13,12 @@
     
     <v-divider style="border-color: rgba(255,255,255,0.2); flex-shrink: 0;"></v-divider>
     
-    <!-- Menu (com scroll) -->
+
     <div style="flex: 1; overflow-y: auto;">
       <v-list nav density="comfortable" style="background: transparent;" class="text-white">
         <v-list-item 
           to="/dashboard" 
+          exact
           prepend-icon="mdi-view-dashboard" 
           title="Dashboard"
           @click="fecharDrawer"
@@ -48,7 +49,7 @@
       </v-list>
     </div>
     
-    <!-- Logout (fixo) -->
+
     <div style="flex-shrink: 0;">
       <v-divider style="border-color: rgba(255,255,255,0.2);"></v-divider>
       
@@ -62,7 +63,7 @@
       </v-list>
     </div>
 
-    <!-- Dialog de Confirmação de Logout -->
+
     <v-dialog v-model="dialogSair" max-width="400px">
       <v-card>
         <v-card-title class="text-h6 d-flex align-center pa-4">
