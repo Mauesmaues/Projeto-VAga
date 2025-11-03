@@ -27,9 +27,9 @@
         title="Produtos"
       />
       <v-list-item 
-        to="/dashboard/estoque" 
-        prepend-icon="mdi-clipboard-list" 
-        title="Estoque"
+        to="/dashboard/historico-estoque" 
+        prepend-icon="mdi-history" 
+        title="Histórico de Estoque"
       />
       <v-list-item 
         to="/dashboard/usuarios" 

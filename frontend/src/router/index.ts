@@ -20,7 +20,7 @@ const routes = [
     children: [
       { path: '', name: 'Dashboard', component: () => import('../modules/dashboard/components/DashboardKpis.vue') },
       { path: 'produtos', name: 'Produtos', component: ProdutoView },
-      { path: 'estoque', name: 'Estoque', component: EstoqueView },
+      { path: 'historico-estoque', name: 'HistoricoEstoque', component: EstoqueView },
       { path: 'usuarios', name: 'Usuarios', component: UsuarioView }
     ]
   },

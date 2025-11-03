@@ -103,8 +103,8 @@ export default defineComponent({
     });
 
     const tiposUsuario = [
-      { title: 'Administrador', value: 'ADMIN' },
-      { title: 'Operador', value: 'OPERADOR' },
+      { title: 'Administrador', value: 'admin' },
+      { title: 'Operador', value: 'operador' },
     ];
 
     const regras = {

@@ -123,13 +123,24 @@ export default defineComponent({
     });
 
     function salvar() {
-      if (!produto.value.nome || !produto.value.preco || produto.value.preco <= 0 || produto.value.quantidade === null || produto.value.quantidade < 0) {
-        erro.value = 'Preencha todos os campos corretamente';
+      // Validar campos
+      if (!produto.value.nome || !produto.value.nome.trim()) {
+        erro.value = 'Nome é obrigatório';
+        return;
+      }
+
+      if (produto.value.preco === null || produto.value.preco === undefined || produto.value.preco <= 0) {
+        erro.value = 'Preço deve ser maior que zero';
+        return;
+      }
+
+      if (produto.value.quantidade === null || produto.value.quantidade === undefined || produto.value.quantidade < 0) {
+        erro.value = 'Quantidade não pode ser negativa';
         return;
       }
 
       emit('salvar', {
-        nome: produto.value.nome,
+        nome: produto.value.nome.trim(),
         preco: Number(produto.value.preco),
         quantidade: Number(produto.value.quantidade)
       });
