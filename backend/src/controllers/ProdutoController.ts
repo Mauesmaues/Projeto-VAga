@@ -19,10 +19,17 @@ export class ProdutoController {
 
   static async criar(req: Request, res: Response) {
     const { nome, preco, quantidade } = req.body;
+    
     if (!nome || preco == null || quantidade == null) {
       return res.status(400).json({ mensagem: 'Nome, preço e quantidade são obrigatórios.' });
     }
-    const produto = await ProdutoRepository.criar({ nome, preco, quantidade });
+    
+    const produto = await ProdutoRepository.criar({ 
+      nome, 
+      preco: Number(preco), 
+      quantidade: Number(quantidade) 
+    });
+    
     if (produto) {
       res.status(201).json(produto);
     } else {
