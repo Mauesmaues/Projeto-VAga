@@ -1,7 +1,3 @@
-<script setup lang="ts">
-import HistoricoEstoqueTabela from '@/modules/estoque/components/HistoricoEstoqueTabela.vue'
-</script>
-
 import { Request, Response } from 'express';
 import { HistoricoEstoqueRepository } from '../repositories/HistoricoEstoqueRepository';
 

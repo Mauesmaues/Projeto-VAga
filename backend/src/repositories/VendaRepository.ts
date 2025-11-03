@@ -76,6 +76,24 @@ export class VendaRepository {
         console.error('Erro ao criar venda:', error);
         return null;
       }
+
+      // 3. Inserir os itens da venda na tabela itens_venda
+      const itensParaInserir = vendaInput.itens.map(item => ({
+        venda_id: data.id,
+        produto_id: item.produto_id,
+        quantidade: item.quantidade,
+        preco_unitario: item.preco_unitario,
+        total_item: item.quantidade * item.preco_unitario
+      }));
+
+      const { error: itensError } = await supabase
+        .from('itens_venda')
+        .insert(itensParaInserir);
+
+      if (itensError) {
+        console.error('Erro ao inserir itens da venda:', itensError);
+        return null;
+      }
       
       return data as Venda;
     } catch (error) {
