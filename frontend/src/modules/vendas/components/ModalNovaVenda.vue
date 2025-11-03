@@ -38,7 +38,22 @@
                       :return-object="true"
                     >
                       <template v-slot:item="{ props, item }">
-                        <v-list-item v-bind="props">
+                        <v-list-item 
+                          v-bind="props"
+                          :disabled="item.raw.quantidade === 0"
+                          :class="{ 'text-grey': item.raw.quantidade === 0 }"
+                        >
+                          <template v-slot:title>
+                            {{ item.raw.nome }}
+                            <v-chip 
+                              v-if="item.raw.quantidade === 0" 
+                              color="error" 
+                              size="x-small" 
+                              class="ml-2"
+                            >
+                              SEM ESTOQUE
+                            </v-chip>
+                          </template>
                           <template v-slot:append>
                             <v-chip color="success" size="small">
                               {{ formatarPreco(item.raw.preco) }}
