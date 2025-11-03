@@ -217,12 +217,14 @@
       <v-divider></v-divider>
 
       <!-- Footer -->
-      <v-card-actions class="pa-4">
-        <v-spacer></v-spacer>
+      <v-card-actions class="pa-4 flex-column flex-sm-row">
+        <v-spacer class="d-none d-sm-flex"></v-spacer>
         <v-btn
           variant="text"
           @click="fechar"
           :disabled="carregando"
+          block
+          class="mb-2 mb-sm-0"
         >
           Cancelar
         </v-btn>
@@ -233,6 +235,8 @@
           :loading="carregando"
           :disabled="itens.length === 0 || !formaPagamento"
           prepend-icon="mdi-cart-plus"
+          block
+          class="mb-2 mb-sm-0"
         >
           Continuar Vendendo
         </v-btn>
@@ -243,6 +247,7 @@
           :loading="carregando"
           :disabled="itens.length === 0 || !formaPagamento"
           prepend-icon="mdi-check"
+          block
         >
           Finalizar Venda
         </v-btn>

@@ -1,11 +1,11 @@
 <template>
-  <v-card elevation="2">
+  <v-card elevation="2" class="mt-6">
     <v-card-title class="d-flex align-center pa-4">
       <v-icon class="mr-2" color="primary" size="28">mdi-format-list-bulleted</v-icon>
       <span class="text-h6 font-weight-bold">Produtos Cadastrados</span>
       <v-spacer></v-spacer>
       <v-chip color="primary" variant="flat">
-        {{ produtosFiltrados.length }} produtos
+        {{ produtosFiltrados.length }}
       </v-chip>
     </v-card-title>
     

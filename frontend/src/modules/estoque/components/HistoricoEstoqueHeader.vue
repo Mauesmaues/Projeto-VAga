@@ -1,5 +1,5 @@
 <template>
-  <v-row align="center" class="mb-6" no-gutters>
+  <v-row align="center" class="mb-8" no-gutters>
     <v-col cols="12" md="6" class="d-flex align-center">
       <v-avatar color="primary" size="48">
         <v-icon>mdi-history</v-icon>
