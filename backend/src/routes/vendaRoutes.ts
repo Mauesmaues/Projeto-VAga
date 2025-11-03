@@ -2,16 +2,13 @@ import { Router } from 'express';
 import { VendaController } from '../controllers/VendaController';
 import { validate } from '../middlewares/validateMiddleware';
 import { vendaSchema } from '../validators/schemas';
+import { requireAuthenticated } from '../middlewares/authorizationMiddleware';
 
 const router = Router();
 
-// Listar todas as vendas
-router.get('/', VendaController.listar);
-
-// Criar nova venda (com validação)
-router.post('/', validate(vendaSchema), VendaController.criar);
-
-// Buscar venda por ID
-router.get('/:id', VendaController.buscarPorId);
+// Todas as rotas de vendas requerem autenticação (admin e operador podem acessar)
+router.get('/', requireAuthenticated, VendaController.listar);
+router.post('/', requireAuthenticated, validate(vendaSchema), VendaController.criar);
+router.get('/:id', requireAuthenticated, VendaController.buscarPorId);
 
 export default router;
