@@ -1,27 +1,59 @@
 <template>
-  <div style="display: flex; height: 100vh; width: 100vw; overflow: hidden; position: relative;">
-    <!-- Sidebar fixa -->
-    <div style="width: 260px; flex-shrink: 0; height: 100vh; position: relative; z-index: 100;">
-      <DashboardSidebar />
-    </div>
-    
-    <!-- Conteúdo principal -->
-    <div style="flex: 1; width: calc(100vw - 260px); height: 100vh; overflow-y: auto; background: #181818; box-sizing: border-box;">
+  <v-layout>
+    <!-- Navigation Drawer (Sidebar) -->
+    <v-navigation-drawer
+      v-model="drawer"
+      :permanent="mdAndUp"
+      :temporary="!mdAndUp"
+      width="260"
+      color="#212121"
+      style="border-right: 1px solid #222;"
+    >
+      <DashboardSidebar @close-drawer="drawer = false" />
+    </v-navigation-drawer>
+
+    <!-- App Bar para Mobile -->
+    <v-app-bar
+      v-if="!mdAndUp"
+      color="#212121"
+      density="compact"
+      elevation="1"
+    >
+      <v-app-bar-nav-icon @click="drawer = !drawer" color="white"></v-app-bar-nav-icon>
+      <v-toolbar-title class="text-white d-flex align-center">
+        <v-icon color="primary" class="mr-2">mdi-cash-register</v-icon>
+        ANB Farma
+      </v-toolbar-title>
+    </v-app-bar>
+
+    <!-- Main Content -->
+    <v-main style="background: #181818; height: 100vh;">
       <div style="padding: 24px; width: 100%; box-sizing: border-box;">
         <router-view />
       </div>
-    </div>
-  </div>
+    </v-main>
+  </v-layout>
 </template>
 
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
+import { useDisplay } from 'vuetify';
 import DashboardSidebar from './components/DashboardSidebar.vue';
+
 export default defineComponent({
   name: 'DashboardModule',
   components: {
     DashboardSidebar
+  },
+  setup() {
+    const drawer = ref(true);
+    const { mdAndUp } = useDisplay();
+
+    return {
+      drawer,
+      mdAndUp
+    };
   }
 });
 </script>

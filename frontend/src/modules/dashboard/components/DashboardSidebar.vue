@@ -2,7 +2,7 @@
 
 
 <template>
-  <div style="width: 260px; height: 100vh; background: #212121; border-right: 1px solid #222; display: flex; flex-direction: column; overflow-y: auto;">
+  <div style="height: 100%; display: flex; flex-direction: column; overflow-y: auto;">
     <!-- Header -->
     <div style="padding: 16px; display: flex; align-items: center;">
       <v-icon color="primary" size="32">mdi-cash-register</v-icon>
@@ -20,21 +20,25 @@
         to="/dashboard" 
         prepend-icon="mdi-view-dashboard" 
         title="Dashboard"
+        @click="fecharDrawer"
       />
       <v-list-item 
         to="/dashboard/produtos" 
         prepend-icon="mdi-package-variant" 
         title="Produtos"
+        @click="fecharDrawer"
       />
       <v-list-item 
         to="/dashboard/historico-estoque" 
         prepend-icon="mdi-history" 
         title="Histórico de Estoque"
+        @click="fecharDrawer"
       />
       <v-list-item 
         to="/dashboard/usuarios" 
         prepend-icon="mdi-account" 
         title="Usuários"
+        @click="fecharDrawer"
       />
     </v-list>
     
@@ -77,12 +81,15 @@
 
 <script lang="ts">
 import { defineComponent, computed, ref } from 'vue';
+import { useDisplay } from 'vuetify';
 import { AuthService } from '../../../services/authService';
 
 export default defineComponent({
   name: 'DashboardSidebar',
-  setup() {
+  emits: ['close-drawer'],
+  setup(props, { emit }) {
     const dialogSair = ref(false);
+    const { mdAndUp } = useDisplay();
 
     const nomeUsuario = computed(() => {
       const user = AuthService.getUser();
@@ -94,7 +101,14 @@ export default defineComponent({
       dialogSair.value = false;
     };
 
-    return { nomeUsuario, dialogSair, confirmarLogout };
+    const fecharDrawer = () => {
+      // Só fecha o drawer se estiver em mobile
+      if (!mdAndUp.value) {
+        emit('close-drawer');
+      }
+    };
+
+    return { nomeUsuario, dialogSair, confirmarLogout, fecharDrawer };
   }
 });
 </script>
