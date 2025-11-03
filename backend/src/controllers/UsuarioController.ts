@@ -30,14 +30,18 @@ export class UsuarioController {
   }
 
   static async listar(req: Request, res: Response) {
+    console.log('Endpoint /usuarios chamado');
     const usuarios = await UsuarioRepository.listarTodos();
-    res.json(usuarios.map(u => ({ 
+    console.log('Usuários encontrados:', usuarios.length);
+    const resultado = usuarios.map(u => ({ 
       id: u.id, 
       nome: u.nome, 
       email: u.email, 
       tipo: u.tipo,
       created_at: u.created_at 
-    })));
+    }));
+    console.log('Retornando:', resultado);
+    res.json(resultado);
   }
 
   static async criar(req: Request, res: Response) {

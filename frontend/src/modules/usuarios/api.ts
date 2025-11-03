@@ -25,11 +25,17 @@ export interface UsuarioUpdate {
 const API_URL = 'http://localhost:3000';
 
 export async function listarUsuarios(): Promise<UsuarioResponse[]> {
+  console.log('Chamando API:', `${API_URL}/usuarios`);
   const response = await authFetch(`${API_URL}/usuarios`);
+  console.log('Status da resposta:', response.status);
   if (!response.ok) {
+    const errorText = await response.text();
+    console.error('Erro na resposta:', errorText);
     throw new Error('Erro ao listar usuários');
   }
-  return response.json();
+  const data = await response.json();
+  console.log('Dados recebidos:', data);
+  return data;
 }
 
 export async function criarUsuario(dados: UsuarioInput): Promise<UsuarioResponse> {
