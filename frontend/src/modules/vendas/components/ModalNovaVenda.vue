@@ -227,9 +227,19 @@
           Cancelar
         </v-btn>
         <v-btn
+          color="primary"
+          variant="elevated"
+          @click="finalizarVenda(true)"
+          :loading="carregando"
+          :disabled="itens.length === 0 || !formaPagamento"
+          prepend-icon="mdi-cart-plus"
+        >
+          Continuar Vendendo
+        </v-btn>
+        <v-btn
           color="success"
           variant="elevated"
-          @click="finalizarVenda"
+          @click="finalizarVenda(false)"
           :loading="carregando"
           :disabled="itens.length === 0 || !formaPagamento"
           prepend-icon="mdi-check"
@@ -238,6 +248,11 @@
         </v-btn>
       </v-card-actions>
     </v-card>
+
+    <!-- Snackbar -->
+    <v-snackbar v-model="snackbar" color="success" timeout="3000" location="bottom">
+      {{ snackbarText }}
+    </v-snackbar>
   </v-dialog>
 </template>
 
@@ -267,6 +282,8 @@ export default defineComponent({
     const formaPagamento = ref<string>('');
     const carregando = ref(false);
     const erro = ref('');
+    const snackbar = ref(false);
+    const snackbarText = ref('');
 
     // Watch para sincronizar com v-model
     watch(() => props.modelValue, (val) => {
@@ -316,7 +333,7 @@ export default defineComponent({
       itens.value.splice(index, 1);
     }
 
-    async function finalizarVenda() {
+    async function finalizarVenda(continuarVendendo: boolean = false) {
       if (itens.value.length === 0 || !formaPagamento.value) return;
 
       carregando.value = true;
@@ -332,11 +349,22 @@ export default defineComponent({
         const vendaCriada = await criarVenda(vendaInput);
         
         emit('vendaCriada', vendaCriada);
-        fechar();
         
-        // Reset
+        // Exibir mensagem de sucesso
+        snackbarText.value = 'Venda realizada com sucesso!';
+        snackbar.value = true;
+        
+        // Reset dos itens e forma de pagamento
         itens.value = [];
         formaPagamento.value = '';
+        
+        // Se não for continuar vendendo, fecha o modal
+        if (!continuarVendendo) {
+          // Aguarda um pouco para o usuário ver a mensagem antes de fechar
+          setTimeout(() => {
+            fechar();
+          }, 500);
+        }
       } catch (error: any) {
         console.error('Erro ao finalizar venda:', error);
         erro.value = error.message || 'Erro ao finalizar venda';
@@ -372,6 +400,8 @@ export default defineComponent({
       formaPagamento,
       carregando,
       erro,
+      snackbar,
+      snackbarText,
       total,
       adicionarItem,
       removerItem,
