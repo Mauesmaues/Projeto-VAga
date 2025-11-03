@@ -5,15 +5,34 @@
       <span class="text-h6 font-weight-bold">Produtos Cadastrados</span>
       <v-spacer></v-spacer>
       <v-chip color="primary" variant="flat">
-        {{ produtos.length }} produtos
+        {{ produtosFiltrados.length }} produtos
       </v-chip>
     </v-card-title>
+    
+    <v-divider></v-divider>
+
+    <!-- Barra de Pesquisa -->
+    <v-card-text>
+      <v-row align="center">
+        <v-col cols="12">
+          <v-text-field
+            v-model="pesquisa"
+            density="comfortable"
+            placeholder="Pesquisar por nome..."
+            prepend-inner-icon="mdi-magnify"
+            variant="outlined"
+            hide-details
+            clearable
+          ></v-text-field>
+        </v-col>
+      </v-row>
+    </v-card-text>
     
     <v-divider></v-divider>
     
     <v-data-table
       :headers="headers"
-      :items="produtos"
+      :items="produtosFiltrados"
       :items-per-page="10"
       class="elevation-0"
       density="comfortable"
@@ -77,7 +96,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, PropType } from 'vue';
+import { defineComponent, computed, PropType, ref } from 'vue';
 import type { Produto } from '../../../types/produto';
 
 export default defineComponent({
@@ -89,7 +108,18 @@ export default defineComponent({
     },
   },
   emits: ['editar', 'deletar'],
-  setup() {
+  setup(props) {
+    const pesquisa = ref('');
+
+    const produtosFiltrados = computed(() => {
+      if (!pesquisa.value) {
+        return props.produtos;
+      }
+      return props.produtos.filter(produto => 
+        produto.nome.toLowerCase().includes(pesquisa.value.toLowerCase())
+      );
+    });
+
     const headers = computed(() => [
       { 
         title: 'Nome do Produto', 
@@ -130,7 +160,12 @@ export default defineComponent({
       return 'R$ 0,00';
     }
     
-    return { headers, formatarPreco };
+    return { 
+      headers, 
+      formatarPreco, 
+      pesquisa, 
+      produtosFiltrados 
+    };
   },
 });
 </script>
