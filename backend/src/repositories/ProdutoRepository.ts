@@ -7,7 +7,7 @@ export class ProdutoRepository {
       .from('produtos')
       .select('*');
     if (error || !data) return [];
-    // Mapear dados do banco incluindo quantidade
+
     return data.map((item: any) => ({
       id: item.id,
       nome: item.nome,
@@ -34,7 +34,7 @@ export class ProdutoRepository {
   }
 
   static async criar(produto: Omit<Produto, 'id'>): Promise<Produto | null> {
-    // Inserir produto com nome, preco e quantidade
+
     const { nome, preco, quantidade } = produto;
     const { data, error } = await supabase
       .from('produtos')
@@ -45,7 +45,7 @@ export class ProdutoRepository {
       console.error('Erro ao criar produto:', error);
     }
     if (error || !data) return null;
-    // Mapear dados do banco incluindo quantidade
+
     return {
       id: data.id,
       nome: data.nome,

@@ -19,12 +19,12 @@ const vuetify = createVuetify({
 			customLight: {
 				dark: false,
 				colors: {
-					primary: '#1976D2',        // Azul principal do favicon
-					secondary: '#42A5F5',      // Azul claro
-					accent: '#2196F3',         // Azul médio
-					background: '#F5F7FA',     // Branco azulado suave
-					surface: '#FFFFFF',        // Branco puro
-					'surface-variant': '#E3F2FD', // Azul muito claro
+					primary: '#1976D2',
+					secondary: '#42A5F5',
+					accent: '#2196F3',
+					background: '#F5F7FA',
+					surface: '#FFFFFF',
+					'surface-variant': '#E3F2FD',
 					error: '#EF5350',
 					success: '#66BB6A',
 					warning: '#FFA726',

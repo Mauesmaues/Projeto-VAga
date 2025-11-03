@@ -28,9 +28,9 @@ export class VendaRepository {
 
   static async criar(vendaInput: VendaInput): Promise<Venda | null> {
     try {
-      // 1. Primeiro, atualizar o estoque de cada produto
+
       for (const item of vendaInput.itens) {
-        // Buscar produto atual
+
         const { data: produto, error: produtoError } = await supabase
           .from('produtos')
           .select('quantidade')
@@ -42,13 +42,11 @@ export class VendaRepository {
           return null;
         }
 
-        // Verificar se há estoque suficiente
         if (produto.quantidade < item.quantidade) {
           console.error(`Estoque insuficiente para produto ${item.produto_id}`);
           return null;
         }
 
-        // Descontar do estoque
         const novaQuantidade = produto.quantidade - item.quantidade;
         const { error: updateError } = await supabase
           .from('produtos')
@@ -61,7 +59,6 @@ export class VendaRepository {
         }
       }
 
-      // 2. Criar a venda
       const { data, error } = await supabase
         .from('vendas')
         .insert([{
@@ -77,7 +74,6 @@ export class VendaRepository {
         return null;
       }
 
-      // 3. Inserir os itens da venda na tabela itens_venda
       const itensParaInserir = vendaInput.itens.map(item => ({
         venda_id: data.id,
         produto_id: item.produto_id,

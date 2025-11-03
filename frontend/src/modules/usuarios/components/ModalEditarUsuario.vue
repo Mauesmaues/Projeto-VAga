@@ -134,8 +134,7 @@ export default defineComponent({
           email: usuarioEdit.value.email,
           tipo: usuarioEdit.value.tipo,
         };
-        
-        // Só inclui a senha se foi preenchida
+
         if (usuarioEdit.value.senha) {
           dados.senha = usuarioEdit.value.senha;
         }

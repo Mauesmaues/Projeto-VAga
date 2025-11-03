@@ -197,7 +197,6 @@ export default defineComponent({
     const carregando = ref(false);
     const erro = ref('');
 
-    // Produtos disponíveis (que não estão na lista de itens)
     const produtosDisponiveis = computed(() => {
       const idsNaLista = itens.value.map(i => i.produto_id);
       return props.produtos.filter(p => !idsNaLista.includes(p.id));
@@ -206,7 +205,7 @@ export default defineComponent({
     watch(() => props.modelValue, (val) => {
       dialogInterno.value = val;
       if (val) {
-        // Resetar ao abrir
+
         itens.value = [];
         produtoSelecionado.value = null;
         quantidadeAdicionar.value = 1;
@@ -221,7 +220,6 @@ export default defineComponent({
     function adicionarItem() {
       if (!produtoSelecionado.value || quantidadeAdicionar.value <= 0) return;
 
-      // Verificar se já existe
       const jaExiste = itens.value.find(i => i.produto_id === produtoSelecionado.value!.id);
       if (jaExiste) {
         erro.value = 'Este produto já está na lista';
@@ -235,7 +233,6 @@ export default defineComponent({
         quantidade: quantidadeAdicionar.value
       });
 
-      // Reset
       produtoSelecionado.value = null;
       quantidadeAdicionar.value = 1;
       erro.value = '';

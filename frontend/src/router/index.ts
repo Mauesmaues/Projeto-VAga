@@ -32,17 +32,16 @@ const router = createRouter({
   routes
 });
 
-// Guard de navegação global
 router.beforeEach((to, from, next) => {
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
   const isAuthenticated = AuthService.isAuthenticated();
 
   if (requiresAuth && !isAuthenticated) {
-    // Rota protegida e usuário não autenticado
+
     console.warn('Acesso negado, redirecionando para login');
     next('/login');
   } else if (to.path === '/login' && isAuthenticated) {
-    // Usuário autenticado tentando acessar login
+
     next('/dashboard');
   } else {
     next();

@@ -34,7 +34,6 @@ export interface JWTPayload {
   exp?: number;
 }
 
-// Extender Request do Express para incluir user
 export interface AuthRequest extends Request {
   user?: JWTPayload;
 }

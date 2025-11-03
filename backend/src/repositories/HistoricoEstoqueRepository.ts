@@ -14,7 +14,7 @@ export interface HistoricoEstoque {
 
 export class HistoricoEstoqueRepository {
   static async listarHistorico(): Promise<HistoricoEstoque[]> {
-    // Buscar todas as vendas estornadas
+
     const { data: estornos } = await supabase
       .from('estornos')
       .select('venda_id');
@@ -23,7 +23,6 @@ export class HistoricoEstoqueRepository {
     
     console.log('Vendas estornadas (não serão exibidas):', vendasEstornadas);
 
-    // Buscar histórico de estoque
     const { data, error } = await supabase
       .from('itens_venda')
       .select(`
@@ -42,8 +41,7 @@ export class HistoricoEstoqueRepository {
       console.error('Erro ao listar histórico:', error);
       return [];
     }
-    
-    // Filtrar vendas que não foram estornadas
+
     const historico = data
       .filter((item: any) => !vendasEstornadas.includes(item.venda_id))
       .map((item: any) => ({
@@ -64,7 +62,7 @@ export class HistoricoEstoqueRepository {
   }
 
   static async listarPorProduto(produto_id: string): Promise<HistoricoEstoque[]> {
-    // Buscar todas as vendas estornadas
+
     const { data: estornos } = await supabase
       .from('estornos')
       .select('venda_id');
@@ -90,8 +88,7 @@ export class HistoricoEstoqueRepository {
       console.error('Erro ao listar histórico por produto:', error);
       return [];
     }
-    
-    // Filtrar vendas que não foram estornadas
+
     return data
       .filter((item: any) => !vendasEstornadas.includes(item.venda_id))
       .map((item: any) => ({

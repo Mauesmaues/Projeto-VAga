@@ -174,7 +174,6 @@ export default defineComponent({
     const usuariosFiltrados = computed(() => {
       let resultado = [...props.usuarios];
 
-      // Filtrar por pesquisa
       if (pesquisa.value) {
         const termo = pesquisa.value.toLowerCase();
         resultado = resultado.filter(u => 
@@ -183,7 +182,6 @@ export default defineComponent({
         );
       }
 
-      // Ordenar por data
       resultado.sort((a, b) => {
         const dataA = new Date(a.created_at || 0).getTime();
         const dataB = new Date(b.created_at || 0).getTime();

@@ -12,7 +12,6 @@ import { JWTPayload } from './types/api';
 
 dotenv.config();
 
-// Extensão do tipo Request para incluir 'usuario' e 'user'
 declare global {
   namespace Express {
     interface Request {
@@ -32,9 +31,8 @@ if (!JWT_SECRET) {
   throw new Error('JWT_SECRET não configurado no arquivo .env');
 }
 
-// Middleware de autenticação JWT
 app.use((req, res, next) => {
-  // Permitir login e docs sem autenticação
+
   if (
     req.path === '/login' ||
     (req.method === 'GET' && req.path === '/docs')
@@ -42,7 +40,6 @@ app.use((req, res, next) => {
     return next();
   }
 
-  // Log do header Authorization para depuração
   console.log('Authorization header:', req.headers['authorization']);
 
   const auth = req.headers['authorization'];
@@ -53,7 +50,7 @@ app.use((req, res, next) => {
   try {
     const payload = jwt.verify(token, JWT_SECRET) as JWTPayload;
     req.usuario = payload;
-    req.user = payload; // Adicionar também como 'user' para VendaController
+    req.user = payload;
     next();
   } catch {
     return res.status(401).json({ mensagem: 'Token inválido.' });
@@ -64,7 +61,6 @@ app.get('/', (req, res) => {
   res.json({ mensagem: 'Bem-vindo à API! Sessão válida.' });
 });
 
-// Documentação das rotas da API
 app.get('/docs', (req, res) => {
   res.json({
     rotas: [

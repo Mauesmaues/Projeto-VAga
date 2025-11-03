@@ -166,11 +166,10 @@ export default defineComponent({
       carregando.value = true;
       try {
         await criarEstorno({
-          venda_id: vendaSelecionada.value.id, // UUID como string
+          venda_id: vendaSelecionada.value.id,
           motivo: motivoEstorno.value || undefined,
         });
 
-        // Atualizar status de estorno localmente
         estornosMap.value.set(vendaSelecionada.value.id, true);
 
         snackbarText.value = 'Venda estornada com sucesso! Produtos devolvidos ao estoque.';
@@ -190,14 +189,13 @@ export default defineComponent({
     const carregarVendas = async () => {
       try {
         const data = await listarVendas();
-        vendas.value = data.slice(0, 10); // Últimas 10 vendas
+        vendas.value = data.slice(0, 10);
         
         console.log('Vendas carregadas:', vendas.value.length);
         console.log('Pode estornar:', podeEstornar);
 
-        // Verificar quais vendas foram estornadas
         for (const venda of vendas.value) {
-          const estornada = await verificarEstorno(venda.id); // UUID como string
+          const estornada = await verificarEstorno(venda.id);
           estornosMap.value.set(venda.id, estornada);
         }
       } catch (error) {

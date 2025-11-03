@@ -177,7 +177,6 @@ export default defineComponent({
     const itensFiltrados = computed(() => {
       let resultado = [...props.historico];
 
-      // Filtrar por pesquisa
       if (pesquisa.value) {
         const termo = pesquisa.value.toLowerCase();
         resultado = resultado.filter(item => 
@@ -185,14 +184,12 @@ export default defineComponent({
         );
       }
 
-      // Filtrar por produto específico
       if (filtroProduto.value) {
         resultado = resultado.filter(item => 
           item.produto_nome === filtroProduto.value
         );
       }
 
-      // Ordenar por data
       resultado.sort((a, b) => {
         const dataA = new Date(a.data_venda || 0).getTime();
         const dataB = new Date(b.data_venda || 0).getTime();

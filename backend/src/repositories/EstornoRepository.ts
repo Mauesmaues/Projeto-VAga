@@ -2,14 +2,14 @@ import { supabase } from '../services/supabaseClient';
 import type { Estorno, CriarEstornoDTO } from '../models/Estorno';
 
 export class EstornoRepository {
-  // Criar estorno e devolver produtos ao estoque
+
   async criarEstorno(dto: CriarEstornoDTO, usuarioId: number): Promise<Estorno> {
     console.log('🔵 INICIANDO PROCESSO DE ESTORNO');
     console.log('DTO:', dto);
     console.log('Usuario ID:', usuarioId);
 
     try {
-      // 1. Buscar a venda
+
       console.log('1️⃣ Buscando venda...');
       const { data: venda, error: vendaError } = await supabase
         .from('vendas')
@@ -24,7 +24,6 @@ export class EstornoRepository {
 
       console.log('✅ Venda encontrada:', venda);
 
-      // 2. Buscar os itens da venda
       console.log('2️⃣ Buscando itens da venda...');
       const { data: itensVenda, error: itensError } = await supabase
         .from('itens_venda')
@@ -39,7 +38,6 @@ export class EstornoRepository {
       console.log('✅ Itens da venda encontrados:', itensVenda.length, 'itens');
       console.log('Itens:', JSON.stringify(itensVenda, null, 2));
 
-      // 3. Verificar se já existe estorno para esta venda
       console.log('3️⃣ Verificando se já foi estornada...');
       const { data: estornoExistente } = await supabase
         .from('estornos')
@@ -54,7 +52,6 @@ export class EstornoRepository {
 
       console.log('✅ Venda não foi estornada ainda');
 
-      // 4. Criar o registro de estorno
       console.log('4️⃣ Criando registro de estorno...');
       const { data: estorno, error: estornoError } = await supabase
         .from('estornos')
@@ -75,12 +72,10 @@ export class EstornoRepository {
       console.log('✅ Registro de estorno criado:', estorno);
       console.log('5️⃣ Iniciando devolução ao estoque...');
 
-      // 5. Devolver produtos ao estoque
       for (const item of itensVenda) {
         console.log('====================================');
         console.log('Processando item:', JSON.stringify(item, null, 2));
 
-        // Buscar produto atual
         const { data: produto, error: produtoError } = await supabase
           .from('produtos')
           .select('quantidade, nome')
@@ -101,7 +96,6 @@ export class EstornoRepository {
         console.log(`Quantidade atual: ${produto.quantidade}`);
         console.log(`Quantidade a devolver: ${item.quantidade}`);
 
-        // Atualizar estoque (devolver quantidade)
         const novaQuantidade = produto.quantidade + item.quantidade;
         
         console.log(`Nova quantidade calculada: ${novaQuantidade}`);
@@ -131,7 +125,6 @@ export class EstornoRepository {
     }
   }
 
-  // Buscar estorno por venda_id
   async buscarPorVendaId(vendaId: string | number): Promise<Estorno | null> {
     const { data, error } = await supabase
       .from('estornos')
@@ -146,7 +139,6 @@ export class EstornoRepository {
     return data;
   }
 
-  // Listar todos os estornos
   async listarTodos(): Promise<Estorno[]> {
     const { data, error } = await supabase
       .from('estornos')
@@ -160,7 +152,6 @@ export class EstornoRepository {
     return data || [];
   }
 
-  // Verificar se venda foi estornada
   async vendaFoiEstornada(vendaId: string | number): Promise<boolean> {
     const { data } = await supabase
       .from('estornos')

@@ -30,7 +30,6 @@ export class AuthService {
     const token = this.getToken();
     if (!token) return false;
 
-    // Verificar se o token está expirado
     return !this.isTokenExpired(token);
   }
 

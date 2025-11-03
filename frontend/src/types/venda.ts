@@ -25,7 +25,7 @@ export interface VendaInput {
 
 export interface Estorno {
   id: number;
-  venda_id: string; // UUID
+  venda_id: string;
   usuario_id: number;
   motivo?: string;
   data_estorno: string;
@@ -33,6 +33,6 @@ export interface Estorno {
 }
 
 export interface CriarEstornoDTO {
-  venda_id: string | number; // Aceita UUID (string) ou number
+  venda_id: string | number;
   motivo?: string;
 }

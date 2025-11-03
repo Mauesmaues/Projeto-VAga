@@ -17,14 +17,12 @@ export class VendaController {
   static async criar(req: AuthRequest, res: Response): Promise<void> {
     try {
       const vendaInput: VendaInput = req.body;
-      
-      // Validar se usuário está autenticado
+
       if (!req.user || !req.user.id) {
         res.status(401).json({ message: 'Usuário não autenticado' });
         return;
       }
-      
-      // Usar ID do usuário autenticado
+
       vendaInput.usuario_id = req.user.id;
       
       const novaVenda = await VendaRepository.criar(vendaInput);

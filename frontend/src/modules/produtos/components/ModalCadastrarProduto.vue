@@ -112,30 +112,26 @@ export default defineComponent({
     });
     const precoInput = ref('');
 
-    // Computed para formatar o preço com máscara
     const precoFormatado = computed({
       get: () => {
         if (!precoInput.value) return '';
         return precoInput.value;
       },
       set: (value: string) => {
-        // Remove tudo que não é número ou vírgula
+
         let valorLimpo = value.replace(/[^\d,]/g, '');
-        
-        // Permite apenas uma vírgula
+
         const partes = valorLimpo.split(',');
         if (partes.length > 2) {
           valorLimpo = partes[0] + ',' + partes.slice(1).join('');
         }
-        
-        // Limita a 2 casas decimais após a vírgula
+
         if (partes.length === 2 && partes[1].length > 2) {
           valorLimpo = partes[0] + ',' + partes[1].substring(0, 2);
         }
         
         precoInput.value = valorLimpo;
-        
-        // Converte para número
+
         if (valorLimpo) {
           const numeroConvertido = parseFloat(valorLimpo.replace(',', '.'));
           produto.value.preco = isNaN(numeroConvertido) ? null : numeroConvertido;
@@ -179,7 +175,6 @@ export default defineComponent({
         quantidade: ''
       };
 
-      // Validar nome
       if (!produto.value.nome || !produto.value.nome.trim()) {
         erros.value.nome = 'Nome é obrigatório';
         valido = false;
@@ -188,7 +183,6 @@ export default defineComponent({
         valido = false;
       }
 
-      // Validar preço
       if (produto.value.preco === null || produto.value.preco === undefined) {
         erros.value.preco = 'Preço é obrigatório';
         valido = false;
@@ -197,7 +191,6 @@ export default defineComponent({
         valido = false;
       }
 
-      // Validar quantidade
       if (produto.value.quantidade === null || produto.value.quantidade === undefined) {
         erros.value.quantidade = 'Quantidade é obrigatória';
         valido = false;

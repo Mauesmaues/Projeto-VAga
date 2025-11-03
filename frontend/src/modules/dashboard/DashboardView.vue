@@ -35,7 +35,6 @@
   </v-layout>
 </template>
 
-
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { useDisplay } from 'vuetify';
@@ -59,7 +58,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-/* Reset global */
+
 * {
   box-sizing: border-box;
 }

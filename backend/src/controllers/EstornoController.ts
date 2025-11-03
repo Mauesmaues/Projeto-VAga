@@ -4,7 +4,6 @@ import { EstornoRepository } from '../repositories/EstornoRepository';
 export class EstornoController {
   private estornoRepository = new EstornoRepository();
 
-  // Criar estorno
   criarEstorno = async (req: Request, res: Response) => {
     try {
       const { venda_id, motivo } = req.body;
@@ -34,10 +33,9 @@ export class EstornoController {
     }
   };
 
-  // Buscar estorno por venda
   buscarPorVenda = async (req: Request, res: Response) => {
     try {
-      const vendaId = req.params.vendaId; // UUID ou number como string
+      const vendaId = req.params.vendaId;
 
       if (!vendaId) {
         return res.status(400).json({ erro: 'ID da venda é obrigatório' });
@@ -56,10 +54,9 @@ export class EstornoController {
     }
   };
 
-  // Verificar se venda foi estornada
   verificarEstorno = async (req: Request, res: Response) => {
     try {
-      const vendaId = req.params.vendaId; // UUID ou number como string
+      const vendaId = req.params.vendaId;
 
       if (!vendaId) {
         return res.status(400).json({ erro: 'ID da venda é obrigatório' });
@@ -74,7 +71,6 @@ export class EstornoController {
     }
   };
 
-  // Listar todos os estornos
   listarEstornos = async (req: Request, res: Response) => {
     try {
       const estornos = await this.estornoRepository.listarTodos();

@@ -58,12 +58,10 @@ export default defineComponent({
         
         if (resp.ok) {
           const data: LoginResponse = await resp.json();
-          
-          // Salva token e usuário usando AuthService
+
           AuthService.setToken(data.token);
           AuthService.setUser(data.usuario);
-          
-          // Redireciona usando router
+
           router.push('/dashboard');
         } else {
           const erro: ErrorResponse = await resp.json();

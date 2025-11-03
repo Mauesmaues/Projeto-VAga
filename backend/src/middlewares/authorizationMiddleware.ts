@@ -1,9 +1,6 @@
 import { Response, NextFunction } from 'express';
 import { AuthRequest } from '../types/api';
 
-/**
- * Middleware que verifica se o usuário é admin
- */
 export const requireAdmin = (
   req: AuthRequest,
   res: Response,
@@ -22,9 +19,6 @@ export const requireAdmin = (
   next();
 };
 
-/**
- * Middleware que permite acesso para admin e operador (ambos autenticados)
- */
 export const requireAuthenticated = (
   req: AuthRequest,
   res: Response,
@@ -37,10 +31,6 @@ export const requireAuthenticated = (
   next();
 };
 
-/**
- * Middleware que verifica se o usuário pode modificar recursos
- * Apenas admin pode criar/editar/deletar
- */
 export const canModify = (
   req: AuthRequest,
   res: Response,
@@ -59,8 +49,4 @@ export const canModify = (
   next();
 };
 
-/**
- * Middleware que permite apenas leitura
- * Ambos admin e operador podem visualizar
- */
 export const canView = requireAuthenticated;

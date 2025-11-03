@@ -1,12 +1,10 @@
-// src/utils/authFetch.ts
-// Função utilitária para requisições autenticadas com token JWT
+
 
 import { AuthService } from '../services/authService';
 
 export async function authFetch(input: RequestInfo, init: RequestInit = {}) {
   const token = AuthService.getToken();
-  
-  // Verificar se o token está expirado
+
   if (token && AuthService.isTokenExpired(token)) {
     console.warn('Token expirado, redirecionando para login...');
     AuthService.logout();
@@ -22,7 +20,6 @@ export async function authFetch(input: RequestInfo, init: RequestInit = {}) {
   try {
     const response = await fetch(input, { ...init, headers });
 
-    // Se receber 401, token inválido - fazer logout
     if (response.status === 401) {
       console.warn('Resposta 401, token inválido');
       AuthService.logout();

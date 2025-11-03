@@ -6,7 +6,6 @@ import { requireAuthenticated } from '../middlewares/authorizationMiddleware';
 
 const router = Router();
 
-// Todas as rotas de vendas requerem autenticação (admin e operador podem acessar)
 router.get('/', requireAuthenticated, VendaController.listar);
 router.post('/', requireAuthenticated, validate(vendaSchema), VendaController.criar);
 router.get('/:id', requireAuthenticated, VendaController.buscarPorId);

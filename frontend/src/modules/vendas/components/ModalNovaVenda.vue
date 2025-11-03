@@ -53,6 +53,14 @@
                             >
                               SEM ESTOQUE
                             </v-chip>
+                            <v-chip 
+                              v-else
+                              :color="item.raw.quantidade <= 5 ? 'warning' : 'info'" 
+                              size="x-small" 
+                              class="ml-2"
+                            >
+                              {{ item.raw.quantidade }} em estoque
+                            </v-chip>
                           </template>
                           <template v-slot:append>
                             <v-chip color="success" size="small">
@@ -60,6 +68,16 @@
                             </v-chip>
                           </template>
                         </v-list-item>
+                      </template>
+                      <template v-slot:selection="{ item }">
+                        <span>{{ item.raw.nome }}</span>
+                        <v-chip 
+                          size="x-small" 
+                          :color="item.raw.quantidade <= 5 ? 'warning' : 'info'"
+                          class="ml-2"
+                        >
+                          {{ item.raw.quantidade }} disp.
+                        </v-chip>
                       </template>
                     </v-select>
                   </v-col>
@@ -69,9 +87,14 @@
                       label="Quantidade"
                       type="number"
                       min="1"
+                      :max="produtoSelecionado?.quantidade || 1"
                       variant="outlined"
                       density="comfortable"
                       prepend-inner-icon="mdi-numeric"
+                      :hint="produtoSelecionado ? `Máximo: ${produtoSelecionado.quantidade}` : ''"
+                      persistent-hint
+                      :error="quantidade > (produtoSelecionado?.quantidade || 0)"
+                      :error-messages="quantidade > (produtoSelecionado?.quantidade || 0) ? 'Quantidade maior que estoque' : ''"
                     />
                   </v-col>
                   <v-col cols="12" md="3" class="d-flex align-center">
@@ -79,7 +102,7 @@
                       color="primary"
                       block
                       @click="adicionarItem"
-                      :disabled="!produtoSelecionado || quantidade <= 0"
+                      :disabled="!produtoSelecionado || quantidade <= 0 || quantidade > (produtoSelecionado?.quantidade || 0)"
                       prepend-icon="mdi-plus"
                     >
                       Adicionar
@@ -289,7 +312,6 @@ export default defineComponent({
     const snackbar = ref(false);
     const snackbarText = ref('');
 
-    // Watch para sincronizar com v-model
     watch(() => props.modelValue, (val) => {
       dialogInterno.value = val;
       if (val) {
@@ -317,6 +339,22 @@ export default defineComponent({
     function adicionarItem() {
       if (!produtoSelecionado.value || quantidade.value <= 0) return;
 
+      if (quantidade.value > produtoSelecionado.value.quantidade) {
+        erro.value = `Estoque insuficiente. Disponível: ${produtoSelecionado.value.quantidade}`;
+        return;
+      }
+
+      const itemExistente = itens.value.find(
+        item => item.produto_id === produtoSelecionado.value!.id
+      );
+      const quantidadeJaAdicionada = itemExistente ? itemExistente.quantidade : 0;
+      const quantidadeTotal = quantidadeJaAdicionada + quantidade.value;
+
+      if (quantidadeTotal > produtoSelecionado.value.quantidade) {
+        erro.value = `Estoque insuficiente. Você já adicionou ${quantidadeJaAdicionada} unidade(s). Disponível: ${produtoSelecionado.value.quantidade}`;
+        return;
+      }
+
       const subtotal = produtoSelecionado.value.preco * quantidade.value;
 
       itens.value.push({
@@ -327,7 +365,6 @@ export default defineComponent({
         subtotal
       });
 
-      // Reset
       produtoSelecionado.value = null;
       quantidade.value = 1;
       erro.value = '';
@@ -353,18 +390,15 @@ export default defineComponent({
         const vendaCriada = await criarVenda(vendaInput);
         
         emit('vendaCriada', vendaCriada);
-        
-        // Exibir mensagem de sucesso
+
         snackbarText.value = 'Venda realizada com sucesso!';
         snackbar.value = true;
-        
-        // Reset dos itens e forma de pagamento
+
         itens.value = [];
         formaPagamento.value = '';
-        
-        // Se não for continuar vendendo, fecha o modal
+
         if (!continuarVendendo) {
-          // Aguarda um pouco para o usuário ver a mensagem antes de fechar
+
           setTimeout(() => {
             fechar();
           }, 500);

@@ -1,6 +1,5 @@
 
 
-
 <template>
   <div style="height: 100%; display: flex; flex-direction: column;">
     <!-- Header (fixo) -->
@@ -115,7 +114,7 @@ export default defineComponent({
     };
 
     const fecharDrawer = () => {
-      // Só fecha o drawer se estiver em mobile
+
       if (!mdAndUp.value) {
         emit('close-drawer');
       }

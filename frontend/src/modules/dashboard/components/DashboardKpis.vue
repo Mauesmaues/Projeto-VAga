@@ -213,9 +213,8 @@ export default defineComponent({
         vendas.value = vendasData;
         estatisticas.value = statsData;
 
-        // Verificar quais vendas foram estornadas
         for (const venda of vendas.value) {
-          const estornada = await verificarEstorno(venda.id); // UUID como string
+          const estornada = await verificarEstorno(venda.id);
           estornosMap.value.set(venda.id, estornada);
         }
       } catch (error) {
@@ -267,7 +266,7 @@ export default defineComponent({
 
     function handleVendaCriada(venda: any) {
       console.log('Venda criada:', venda);
-      carregarDados(); // Recarregar dados após criar venda
+      carregarDados();
     }
 
     function abrirDialogEstorno(venda: Venda) {
@@ -298,7 +297,6 @@ export default defineComponent({
           motivo: motivoEstorno.value || undefined,
         });
 
-        // Atualizar status de estorno localmente
         estornosMap.value.set(vendaSelecionada.value.id, true);
 
         snackbarText.value = 'Venda estornada com sucesso! Produtos devolvidos ao estoque.';
@@ -306,7 +304,7 @@ export default defineComponent({
         snackbar.value = true;
 
         fecharDialogEstorno();
-        carregarDados(); // Recarregar dados
+        carregarDados();
       } catch (error: any) {
         snackbarText.value = error.message || 'Erro ao estornar venda';
         snackbarColor.value = 'error';

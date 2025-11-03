@@ -1,4 +1,4 @@
-// API utilitário para Produtos
+
 import { authFetch } from '../../utils/authFetch';
 import type { Produto, ProdutoInput } from '../../types/produto';
 

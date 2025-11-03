@@ -4,7 +4,6 @@ import { canView } from '../middlewares/authorizationMiddleware';
 
 const router = Router();
 
-// Ambos admin e operador podem visualizar o dashboard
 router.get('/estatisticas', canView, DashboardController.getEstatisticas);
 
 export default router;

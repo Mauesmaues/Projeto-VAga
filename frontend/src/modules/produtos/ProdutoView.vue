@@ -145,7 +145,7 @@ export default defineComponent({
 
     async function atualizarEstoque(itens: any[]) {
       try {
-        // Atualizar cada produto
+
         const promises = itens.map(item => 
           apiAtualizarProduto(item.produto_id, {
             quantidade: item.estoque_atual + item.quantidade
@@ -153,8 +153,7 @@ export default defineComponent({
         );
 
         const atualizados = await Promise.all(promises);
-        
-        // Atualizar lista local
+
         atualizados.forEach(produtoAtualizado => {
           const index = produtos.value.findIndex(p => p.id === produtoAtualizado.id);
           if (index !== -1) {
